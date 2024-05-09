@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Die from './components/Die';
-import { getRandomBool } from './model/utils';
+import { getRandomInt } from './model/utils';
 import Board, { Tile } from './components/Board';
 import Player from './components/Player';
 
 function App() {
 
-  const [dice, setDice] = useState([false, false, false, false]);
+  const [dice, setDice] = useState<Array<Array<number>>>([[0, 1], [1, 3], [2, 3], [0, 2]]);
   const [board, setBoard] = useState([
     Tile.Empty,
     Tile.Empty,
@@ -34,13 +33,30 @@ function App() {
   })
 
 
-  function rollHandler () {
+  function getRandomDiceState() {
+    const diceStates = [
+      [0, 1],
+      [0, 2],
+      [0, 3],
+      [1, 2],
+      [1, 3],
+      [2, 3],
+    ]
+
+    return diceStates[getRandomInt(diceStates.length)]
+  }
+
+  function getDiceValueFromState(diceState: number[]) {
+    return diceState.includes(3)
+  }
+
+  function rollHandler() {
     if (canRoll) {
       console.log('rolled')
       setCanRoll(false)
       setCanMove(true)
       setDice((prevState) => {
-        return prevState.map(die => getRandomBool())
+        return prevState.map(() => getRandomDiceState())
       })
     }
   }
@@ -52,7 +68,7 @@ function App() {
       const playerTile = currentPlayer == 1 ? Tile.Player1 : Tile.Player2
       const opponentTile = playerTile == Tile.Player1 ? Tile.Player2 : Tile.Player1
       let opponentStones = currentPlayer == 1 ? player2.stonesCount : player1.stonesCount
-      const steps = dice.reduce((acc, curr) => curr ? acc + 1 : acc, 0)
+      const steps = dice.reduce((acc, curr) => getDiceValueFromState(curr) ? acc + 1 : acc, 0)
       const targetTile = board[steps]
 
       if (player.stonesCount < 1) {
@@ -70,11 +86,11 @@ function App() {
       }
 
       if (currentPlayer == 1) {
-        setPlayer1(prevState => {return {...prevState, stonesCount: prevState.stonesCount - 1}})
-        setPlayer2(prevState => {return {...prevState, stonesCount: opponentStones}})
+        setPlayer1(prevState => { return { ...prevState, stonesCount: prevState.stonesCount - 1 } })
+        setPlayer2(prevState => { return { ...prevState, stonesCount: opponentStones } })
       } else {
-        setPlayer2(prevState => {return {...prevState, stonesCount: prevState.stonesCount - 1}})
-        setPlayer1(prevState => {return {...prevState, stonesCount: opponentStones}})
+        setPlayer2(prevState => { return { ...prevState, stonesCount: prevState.stonesCount - 1 } })
+        setPlayer1(prevState => { return { ...prevState, stonesCount: opponentStones } })
       }
 
       setBoard(prevState => {
@@ -95,7 +111,7 @@ function App() {
       const playerTile = currentPlayer == 1 ? Tile.Player1 : Tile.Player2
       const opponentTile = playerTile == Tile.Player1 ? Tile.Player2 : Tile.Player1
       let opponentStones = currentPlayer == 1 ? player2.stonesCount : player1.stonesCount
-      const steps = dice.reduce((acc, curr) => curr ? acc + 1 : acc, 0)
+      const steps = dice.reduce((acc, curr) => getDiceValueFromState(curr) ? acc + 1 : acc, 0)
       const targetTile = board[steps + tileId]
       const selectedTile = board[tileId]!
 
@@ -126,9 +142,9 @@ function App() {
       }
 
       if (currentPlayer == 1) {
-        setPlayer2(prevState => {return {...prevState, stonesCount: opponentStones}})
+        setPlayer2(prevState => { return { ...prevState, stonesCount: opponentStones } })
       } else {
-        setPlayer1(prevState => {return {...prevState, stonesCount: opponentStones}})
+        setPlayer1(prevState => { return { ...prevState, stonesCount: opponentStones } })
       }
 
       setBoard(prevState => {
@@ -152,8 +168,8 @@ function App() {
   }
 
   const diceComponents = dice.map((die, index) => {
-    return <Die key={index} value={die} rollHandler={rollHandler}></Die>
-  }) 
+    return <Die key={index} sides={die} rollHandler={rollHandler} size={150}></Die>
+  })
 
   const player1Component = <Player bankHandler={bankHandler} name={player1.name} color={player1.color} stonesCount={player1.stonesCount}></Player>
   const player2Component = <Player bankHandler={bankHandler} name={player2.name} color={player2.color} stonesCount={player2.stonesCount}></Player>
