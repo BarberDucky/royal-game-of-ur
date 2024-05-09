@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import './App.css';
 import Die from './components/Die';
 import { getRandomInt } from './model/utils';
-import Board, { Tile, TileType } from './components/Board';
+import Board from './components/Board';
 import Player from './components/Player';
 import { StoneColor } from './components/Stone';
+import { TileData, TileType } from './components/Tile';
 
 function App() {
 
   const [dice, setDice] = useState<Array<Array<number>>>([[0, 1], [1, 3], [2, 3], [0, 2]]);
-  const [board, setBoard] = useState<Array<Tile>>([
+  const [board, setBoard] = useState<Array<TileData>>([
     { tileType: TileType.Standard, stone: null },
     { tileType: TileType.Standard, stone: null },
     { tileType: TileType.Standard, stone: null },
-    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Special, stone: null },
     { tileType: TileType.Standard, stone: null },
     { tileType: TileType.Standard, stone: null },
     { tileType: TileType.Standard, stone: null },
@@ -96,7 +97,7 @@ function App() {
       { tileType: TileType.Standard, stone: null },
       { tileType: TileType.Standard, stone: null },
       { tileType: TileType.Standard, stone: null },
-      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Special, stone: null },
       { tileType: TileType.Standard, stone: null },
       { tileType: TileType.Standard, stone: null },
       { tileType: TileType.Standard, stone: null },
