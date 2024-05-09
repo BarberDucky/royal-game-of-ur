@@ -4,6 +4,7 @@ import Die from './components/Die';
 import { getRandomInt } from './model/utils';
 import Board, { Tile } from './components/Board';
 import Player from './components/Player';
+import { StoneColor } from './components/Stone';
 
 function App() {
 
@@ -23,12 +24,12 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState(1)
   const [player1, setPlayer1] = useState({
     name: '1',
-    color: 'red',
+    color: 'black' as StoneColor,
     stonesCount: 2,
   })
   const [player2, setPlayer2] = useState({
     name: '2',
-    color: 'blue',
+    color: 'white' as StoneColor,
     stonesCount: 2,
   })
 
@@ -168,7 +169,7 @@ function App() {
   }
 
   const diceComponents = dice.map((die, index) => {
-    return <Die key={index} sides={die} rollHandler={rollHandler} size={150}></Die>
+    return <Die key={index} sides={die} rollHandler={rollHandler} size={100}></Die>
   })
 
   const player1Component = <Player bankHandler={bankHandler} name={player1.name} color={player1.color} stonesCount={player1.stonesCount}></Player>

@@ -1,24 +1,21 @@
+import Stone, { StoneColor } from "./Stone"
+
 interface PlayerProps {
     name: string
-    color: string
+    color: StoneColor
     stonesCount: number
     bankHandler: () => void
 }
 
-function Player (props: PlayerProps) {
+function Player(props: PlayerProps) {
 
-    const stoneComponents = Array.from({length: props.stonesCount}, (_, i) => {
-        return <div
+    const stoneComponents = Array.from({ length: props.stonesCount }, (_, i) => {
+        return <Stone
             key={i}
-            style={{
-                width: '30px',
-                height: '30px',
-                border: 'solid black',
-                borderRadius: '30px',
-                backgroundColor: props.color,
-            }}
             onClick={props.bankHandler}
-        ></div>
+            color={props.color}
+            size={35}
+        ></Stone>
     })
 
     return (
@@ -29,11 +26,7 @@ function Player (props: PlayerProps) {
                 right: 0,
             }}
         >
-            <span
-                style={{
-                    color: props.color
-                }}
-            >{`Player ${props.name}`}</span>
+            <span>{`Player ${props.name}`}</span>
             <div>
                 {stoneComponents}
             </div>
