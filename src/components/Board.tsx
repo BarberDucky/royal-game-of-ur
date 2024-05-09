@@ -1,15 +1,18 @@
-export enum Tile {
-    Empty = 'Empty',
-    Player1 = 'Player1',
-    Player2 = 'Player2',
+import { StoneColor } from "./Stone"
+
+export enum TileType {
+    Standard = 'Standard',
     Special = 'Special'
 } 
 
-const TileToColorMap: Record<Tile, string> = {
-    [Tile.Empty]: 'white',
-    [Tile.Player1]: 'red',
-    [Tile.Player2]: 'blue',
-    [Tile.Special]: 'yellow',
+export interface Tile {
+    tileType: TileType
+    stone: StoneColor | null
+}
+
+const TileToColorMap: Record<TileType, string> = {
+    [TileType.Standard]: 'black',
+    [TileType.Special]: 'red',
 }
 
 interface BoardProps {
@@ -26,9 +29,9 @@ function Board(props: BoardProps) {
             style={{
                 width: '50px',
                 height: '50px',
-                border: 'solid black',
+                border: `solid ${TileToColorMap[tile.tileType]}`,
                 borderRadius: '50px',
-                backgroundColor: TileToColorMap[tile],
+                backgroundColor: tile.stone ?? 'lightgray',
             }}
             onClick={() => props.tileHandler(index)}
         ></div>

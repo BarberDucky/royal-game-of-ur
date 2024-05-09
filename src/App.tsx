@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import './App.css';
 import Die from './components/Die';
 import { getRandomInt } from './model/utils';
-import Board, { Tile } from './components/Board';
+import Board, { Tile, TileType } from './components/Board';
 import Player from './components/Player';
 import { StoneColor } from './components/Stone';
 
 function App() {
 
   const [dice, setDice] = useState<Array<Array<number>>>([[0, 1], [1, 3], [2, 3], [0, 2]]);
-  const [board, setBoard] = useState([
-    Tile.Empty,
-    Tile.Empty,
-    Tile.Empty,
-    Tile.Empty,
-    Tile.Empty,
-    Tile.Empty,
-    Tile.Empty,
-    Tile.Empty,
+  const [board, setBoard] = useState<Array<Tile>>([
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
+    { tileType: TileType.Standard, stone: null },
   ])
   const [canRoll, setCanRoll] = useState(true)
   const [canMove, setCanMove] = useState(false)
@@ -53,12 +53,12 @@ function App() {
 
   function canMoveFromBank(steps: number): boolean {
     const player = currentPlayer == 1 ? player1 : player2
-    const playerTile = currentPlayer == 1 ? Tile.Player1 : Tile.Player2
+    const playerTile = currentPlayer == 1 ? 'black' : 'white'
     const targetTile = board[steps - 1]
 
     if (
       player.stonesCount < 1 ||
-      targetTile == playerTile
+      targetTile.stone == playerTile
     ) {
       return false
     }
@@ -67,14 +67,14 @@ function App() {
   }
 
   function canMoveStoneFromBoard(tileId: number, steps: number): boolean {
-    const playerTile = currentPlayer == 1 ? Tile.Player1 : Tile.Player2
+    const playerTile = currentPlayer == 1 ? 'black' : 'white'
     const targetTile = board[steps + tileId]
-    const selectedTile = board[tileId]!
+    const selectedTile = board[tileId]
 
     if (
-      selectedTile != playerTile ||
       tileId + steps > board.length ||
-      targetTile == playerTile
+      selectedTile.stone != playerTile ||
+      (targetTile != null && targetTile.stone == playerTile)
     ) {
       return false
     }
@@ -93,14 +93,14 @@ function App() {
   function resetState() {
     setDice([[0, 1], [1, 3], [2, 3], [0, 2]])
     setBoard([
-      Tile.Empty,
-      Tile.Empty,
-      Tile.Empty,
-      Tile.Empty,
-      Tile.Empty,
-      Tile.Empty,
-      Tile.Empty,
-      Tile.Empty,
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
+      { tileType: TileType.Standard, stone: null },
     ])
     setCanRoll(true)
     setCanMove(false)
@@ -147,8 +147,8 @@ function App() {
   function bankHandler() {
     if (canMove) {
 
-      const playerTile = currentPlayer == 1 ? Tile.Player1 : Tile.Player2
-      const opponentTile = playerTile == Tile.Player1 ? Tile.Player2 : Tile.Player1
+      const playerTile = currentPlayer == 1 ? 'black' : 'white'
+      const opponentTile = playerTile == 'black' ? 'white' : 'black'
       let opponentStones = currentPlayer == 1 ? player2.stonesCount : player1.stonesCount
       const steps = dice.reduce((acc, curr) => getDiceValueFromState(curr) ? acc + 1 : acc, 0)
       const targetTile = board[steps - 1]
@@ -157,7 +157,7 @@ function App() {
         return
       }
 
-      if (targetTile == opponentTile) {
+      if (targetTile.stone == opponentTile) {
         opponentStones++
       }
 
@@ -170,7 +170,7 @@ function App() {
       }
 
       setBoard(prevState => {
-        return prevState.map((tile, index) => index == steps - 1 ? playerTile : tile)
+        return prevState.map((tile, index) => index == steps - 1 ? { tileType: tile.tileType, stone: playerTile } : tile)
       })
 
       setCanMove(false)
@@ -184,13 +184,13 @@ function App() {
   function tileHandler(tileId: number) {
     if (canMove) {
       const player = currentPlayer == 1 ? player1 : player2
-      const playerTile = currentPlayer == 1 ? Tile.Player1 : Tile.Player2
-      const opponentTile = playerTile == Tile.Player1 ? Tile.Player2 : Tile.Player1
+      const playerTile = currentPlayer == 1 ? 'black' : 'white'
+      const opponentTile = playerTile == 'black' ? 'white' : 'black'
       let opponentStones = currentPlayer == 1 ? player2.stonesCount : player1.stonesCount
       const steps = dice.reduce((acc, curr) => getDiceValueFromState(curr) ? acc + 1 : acc, 0)
       const targetTile = board[steps + tileId]
 
-      const tilesOnBoard = board.reduce((acc, curr) => curr == playerTile ? acc + 1 : acc, 0)
+      const tilesOnBoard = board.reduce((acc, curr) => curr.stone == playerTile ? acc + 1 : acc, 0)
 
       if (!canMoveStoneFromBoard(tileId, steps)) {
         return
@@ -202,7 +202,7 @@ function App() {
         return
       }
 
-      if (targetTile == opponentTile) {
+      if (targetTile != null && targetTile.stone == opponentTile) {
         opponentStones++
       }
 
@@ -215,9 +215,9 @@ function App() {
       setBoard(prevState => {
         return prevState.map((tile, index) => {
           if (index == tileId) {
-            return Tile.Empty
+            return { tileType: tile.tileType, stone: null }
           } else if (index == steps + tileId) {
-            return playerTile
+            return { tileType: tile.tileType, stone: playerTile }
           } else {
             return tile
           }
