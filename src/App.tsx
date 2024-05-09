@@ -158,7 +158,7 @@ function App() {
         return
       }
 
-      if (targetTile.stone == opponentTile) {
+      if (targetTile != null && targetTile.stone == opponentTile) {
         opponentStones++
       }
 
@@ -176,9 +176,12 @@ function App() {
 
       setCanMove(false)
       setCanRoll(true)
-      setCurrentPlayer((prevState) => {
-        return prevState == 1 ? 2 : 1
-      })
+
+      if (targetTile == null || targetTile.tileType != TileType.Special) {
+        setCurrentPlayer((prevState) => {
+          return prevState == 1 ? 2 : 1
+        })
+      }
     }
   }
 
@@ -227,9 +230,11 @@ function App() {
 
       setCanMove(false)
       setCanRoll(true)
-      setCurrentPlayer((prevState) => {
-        return prevState == 1 ? 2 : 1
-      })
+      if (targetTile == null || targetTile.tileType != TileType.Special) {
+        setCurrentPlayer((prevState) => {
+          return prevState == 1 ? 2 : 1
+        })
+      }
     }
   }
 
