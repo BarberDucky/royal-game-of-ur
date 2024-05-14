@@ -2,7 +2,7 @@ import Stone, { StoneColor } from "./Stone"
 
 export enum TileType {
     Standard = 'Standard',
-    Special = 'Special'
+    Rosette = 'Rosette'
 }
 
 export interface TileData {
@@ -12,7 +12,7 @@ export interface TileData {
 
 const TileToColorMap: Record<TileType, string> = {
     [TileType.Standard]: 'antiquewhite',
-    [TileType.Special]: 'mediumseagreen',
+    [TileType.Rosette]: 'mediumseagreen',
 }
 
 interface TileProps {
