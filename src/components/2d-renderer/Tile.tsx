@@ -1,14 +1,5 @@
-import Stone, { StoneColor } from "./Stone"
-
-export enum TileType {
-    Standard = 'Standard',
-    Rosette = 'Rosette'
-}
-
-export interface TileData {
-    tileType: TileType
-    stone: StoneColor | null
-}
+import { TileData, TileType } from "../../model/Game"
+import Stone from "./Stone"
 
 const TileToColorMap: Record<TileType, string> = {
     [TileType.Standard]: 'antiquewhite',

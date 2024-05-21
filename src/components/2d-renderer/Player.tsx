@@ -1,4 +1,5 @@
-import Stone, { StoneColor } from "./Stone"
+import { StoneColor } from "../../model/Game"
+import Stone from "./Stone"
 
 interface PlayerProps {
     name: string

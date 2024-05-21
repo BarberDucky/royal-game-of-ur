@@ -1,4 +1,3 @@
-
 interface DieProps {
     sides: number[]
     rollHandler: () => void

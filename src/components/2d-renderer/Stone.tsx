@@ -1,14 +1,9 @@
+import { StoneColor, colorScheme } from "../../model/Game"
+
 interface StoneProps {
     color: StoneColor
     onClick: () => void
     size: number
-}
-
-export type StoneColor = keyof typeof colorScheme
-
-const colorScheme = {
-    black: { fill: 'black', dots: 'white' },
-    white: { fill: 'white', dots: 'black' },
 }
 
 function Stone(props: StoneProps) {

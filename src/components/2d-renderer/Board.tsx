@@ -1,4 +1,5 @@
-import Tile, { TileData } from "./Tile"
+import { TileData } from "../../model/Game"
+import Tile from "./Tile"
 
 interface BoardProps {
     tiles: Readonly<Array<TileData>>

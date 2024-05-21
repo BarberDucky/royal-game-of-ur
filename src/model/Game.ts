@@ -1,6 +1,21 @@
-import { StoneColor } from "../components/Stone"
-import { TileData, TileType } from "../components/Tile"
 import { getRandomInt } from "./utils"
+
+export enum TileType {
+  Standard = 'Standard',
+  Rosette = 'Rosette'
+}
+
+export interface TileData {
+  tileType: TileType
+  stone: StoneColor | null
+}
+
+export type StoneColor = keyof typeof colorScheme
+
+export const colorScheme = {
+    black: { fill: 'black', dots: 'white' },
+    white: { fill: 'white', dots: 'black' },
+}
 
 function t(): TileData {
   return { tileType: TileType.Standard, stone: null }
