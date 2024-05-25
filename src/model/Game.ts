@@ -13,8 +13,8 @@ export interface TileData {
 export type StoneColor = keyof typeof colorScheme
 
 export const colorScheme = {
-    black: { fill: 'black', dots: 'white' },
-    white: { fill: 'white', dots: 'black' },
+  black: { fill: 'black', dots: 'white' },
+  white: { fill: 'white', dots: 'black' },
 }
 
 function t(): TileData {
@@ -156,6 +156,11 @@ export class Game {
 
   private getDiceValueFromState(diceState: number[]) {
     return diceState.includes(3)
+  }
+
+  public getSteps() {
+    const steps = this.dice.reduce((acc, curr) => this.getDiceValueFromState(curr) ? acc + 1 : acc, 0)
+    return steps
   }
 
   public rollHandler() {
