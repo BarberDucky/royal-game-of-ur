@@ -6,6 +6,7 @@ import Board from './Board';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import Die from './Die';
 import Player from './Player';
+import { DoubleSide, Vector3 } from 'three';
 
 function App3D() {
 
@@ -36,18 +37,39 @@ function App3D() {
     }))
   }
 
+  const layouts = [
+    {
+      diceQueuingDimension: 0,
+      dicePositions: [0, 0, -7],
+      boardPositions: [0, 0, 0],
+      player1Positions: [-5, 0, 5],
+      player2Positions: [5, 0, 5],
+    },
+    {
+      diceQueuingDimension: 2,
+      dicePositions: [10, 0, 0],
+      boardPositions: [0, 0, 0],
+      player1Positions: [-5, 0, -4],
+      player2Positions: [5, 0, -4],
+    },
+  ]
+
+  const currentLayout = layouts[1]
+
   const diceComponents = game.dice.map((die, index) => {
+    const offset = -3 + index * 2
+    const position = [0, 1, 0]
+    position[currentLayout.diceQueuingDimension] = offset
+
     return <Die
       key={index}
       sides={die}
       onClick={rollHandler}
-      position={[-3 + index * 2, -1, -7]}
+      position={position as unknown as Vector3}
+      castShadow
     >
     </Die>
   })
-
-  const player1Component = <Player bankHandler={bankHandler} name={game.player1.name} color={game.player1.color} stonesCount={game.player1.stonesCount}></Player>
-  const player2Component = <Player bankHandler={bankHandler} name={game.player2.name} color={game.player2.color} stonesCount={game.player2.stonesCount}></Player>
 
   const status = game.canRoll
     ? `ROLL PLAYER ${game.currentPlayer}`
@@ -57,14 +79,27 @@ function App3D() {
 
   return (
     <div className="App3D">
-      <Canvas camera={{ position: [0, 19, 1] }} >
-        <color attach="background" args={[0.1, 0.1, 0.1]} />
+      <Canvas 
+        camera={{ zoom: 50, position: [-10, 10, -10] }} orthographic 
+        // camera={{ position: [-10, 10, -10] }}
+        shadows >
+        <color attach="background" args={[0, 0, 0]} />
         <ambientLight intensity={1} />
-        <pointLight position={[0, 7, -6]} decay={1} intensity={20} />
-        {diceComponents}
-        <Board tiles={game.board} tileHandler={tileHandler}></Board>
-        {game.currentPlayer == 1 ? player1Component : player2Component}
-        <OrbitControls />
+        <pointLight position={[0, 7, -6]} decay={1} intensity={15} castShadow />
+        {/* <directionalLight position={[0, 7, 0]} castShadow /> */}
+        <mesh position={[0, -0.5, 0]} receiveShadow>
+          <boxGeometry args={[30, 1, 30]} />
+          <meshStandardMaterial color="lightgrey" />
+        </mesh>
+
+        <group position={currentLayout.dicePositions as unknown as Vector3}>
+          {diceComponents}
+        </group>
+        <Board position={currentLayout.boardPositions as unknown as Vector3} tiles={game.board} tileHandler={tileHandler} castShadow></Board>
+        <Player position={currentLayout.player1Positions as unknown as Vector3} bankHandler={bankHandler} name={game.player1.name} color={game.player1.color} stonesCount={game.player1.stonesCount}></Player>
+        <Player position={currentLayout.player2Positions as unknown as Vector3} bankHandler={bankHandler} name={game.player2.name} color={game.player2.color} stonesCount={game.player2.stonesCount}></Player>
+
+        {/* <OrbitControls /> */}
       </Canvas>
       <span style={{
         position: 'fixed',

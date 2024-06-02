@@ -21,7 +21,6 @@ function Board(props: ThreeElements['group'] & BoardProps) {
     <group {...props} dispose={null}>
       <mesh
         castShadow
-        receiveShadow
         geometry={(nodes.Board as Mesh).geometry}
         material={materials['Material.001']}
       />

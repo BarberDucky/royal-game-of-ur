@@ -24,13 +24,11 @@ function Die(props: ThreeElements['group'] & DieProps) {
     >
       <mesh
         castShadow
-        receiveShadow
         geometry={(nodes.Solid001 as THREE.Mesh).geometry}
         material={materials['Material.002']}
       />
       <mesh
         castShadow
-        receiveShadow
         geometry={(nodes.Solid001_1 as THREE.Mesh).geometry}
         material={materials['Material.003']}
       />

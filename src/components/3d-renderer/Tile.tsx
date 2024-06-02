@@ -43,8 +43,6 @@ function Tile(props: ThreeElements['group'] & TileProps) {
         ref={groupRef}
         onPointerOver={() => setIsSelected(true)}
         onPointerOut={() => setIsSelected(false)}
-        castShadow
-        receiveShadow
         geometry={(nodes[nodeId] as THREE.Mesh).geometry}
         material={
           isSelected

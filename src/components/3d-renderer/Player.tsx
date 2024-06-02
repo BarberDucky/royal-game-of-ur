@@ -16,12 +16,12 @@ function Player(props: ThreeElements['group'] & PlayerProps) {
       key={i}
       onClick={props.bankHandler}
       color={props.color}
-      position={[-((props.stonesCount - 1) * 1.5) / 2 + i * 1.5, 0, 5]}
+      position={[-((props.stonesCount - 1) * 1.5) / 2 + i * 1.5, 0.25, 0]}
     ></Stone>
   })
 
   return (
-    <group>
+    <group {...props}>
       {stoneComponents}
     </group>
   )
