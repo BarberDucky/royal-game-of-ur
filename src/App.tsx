@@ -6,9 +6,12 @@ import IntroPage from './pages/Intro';
 function App() {
 
   return (
-    <Suspense>
-      <App3D></App3D>
-    </Suspense>
+    <>
+      <IntroPage></IntroPage>
+      <Suspense>
+        <App3D></App3D>
+      </Suspense>
+    </>
   );
 }
 

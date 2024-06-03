@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App3D.css';
 import { Game, GameState } from '../../model/Game';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import Board from './Board';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import Die from './Die';
@@ -101,15 +101,6 @@ function App3D() {
 
         {/* <OrbitControls /> */}
       </Canvas>
-      <span style={{
-        position: 'fixed',
-        top: 50,
-        left: 0,
-        width: '100vw',
-        textAlign: 'center',
-        fontSize: 50,
-        color: 'white',
-      }}>{status}</span>
     </div>
   );
 }
