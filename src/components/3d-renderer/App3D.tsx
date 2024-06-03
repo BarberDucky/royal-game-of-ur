@@ -21,7 +21,12 @@ function App3D() {
     }))
   }
 
-  function bankHandler() {
+  function bankHandler(color: 'black' | 'white') {
+    const currentPlayerColor = game.currentPlayer == 1 ? 'black' : 'white'
+    if (color != currentPlayerColor) {
+      return
+    }
+
     gameObj.bankHandler()
     setGame(prevState => ({
       ...prevState,
