@@ -43,29 +43,8 @@ function App3D() {
     }))
   }
 
-  const layouts = [
-    {
-      diceQueuingDimension: 0,
-      dicePositions: [0, 0, -7],
-      boardPositions: [0, 0, 0],
-      player1Positions: [-5, 0, 5],
-      player2Positions: [5, 0, 5],
-    },
-    {
-      diceQueuingDimension: 2,
-      dicePositions: [10, 0, 0],
-      boardPositions: [0, 0, 0],
-      player1Positions: [-5, 0, -4],
-      player2Positions: [5, 0, -4],
-    },
-  ]
-
-  const currentLayout = layouts[1]
-
   const diceComponents = game.dice.map((die, index) => {
-    const offset = -3 + index * 2
-    const position = [0, 1, 0]
-    position[currentLayout.diceQueuingDimension] = offset
+    const position = [-3 + index * 2, 1, 0]
 
     return <Die
       key={index}
@@ -96,19 +75,24 @@ function App3D() {
           <meshStandardMaterial color="white" />
         </mesh>
 
-        <group position={currentLayout.dicePositions as unknown as Vector3}>
+        <group position={[1, 0, 5]}>
           {diceComponents}
         </group>
-        <Board position={currentLayout.boardPositions as unknown as Vector3} tiles={game.board} tileHandler={tileHandler} castShadow></Board>
+        <Board
+          position={[0, 0, 0]}
+          tiles={game.board}
+          tileHandler={tileHandler}
+          castShadow
+        />
         <Player
-          position={currentLayout.player1Positions as unknown as Vector3}
+          position={[-5, 0, -6]}
           bankHandler={bankHandler}
           name={game.player1.name}
           color={game.player1.color}
           stonesCount={game.player1.stonesCount}
         />
         <Player
-          position={currentLayout.player2Positions as unknown as Vector3}
+          position={[5, 0, -6]}
           bankHandler={bankHandler}
           name={game.player2.name}
           color={game.player2.color}
