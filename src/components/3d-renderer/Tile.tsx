@@ -8,6 +8,7 @@ import Stone from './Stone'
 export interface TileProps {
   tileId: number
   tile: TileData
+  canMoveStone: boolean
   onClick: () => void
 }
 
@@ -24,7 +25,8 @@ function Tile(props: ThreeElements['group'] & TileProps) {
 
   let tileCenter = new THREE.Vector3()
   groupRef.current?.geometry.boundingBox?.getCenter(tileCenter)
-  tileCenter.setY(tileCenter.getComponent(1) + 0.25)
+  const playableHeight = props.canMoveStone ? 1 : 0
+  tileCenter.setY(tileCenter.getComponent(1) + 0.25 + playableHeight)
 
   function createStoneComponent() {
     const stone = props.tile.stone

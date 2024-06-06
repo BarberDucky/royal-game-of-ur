@@ -109,6 +109,11 @@ export class Game {
     return true
   }
 
+  public canMoveStoneFromTile(tileId: number): boolean {
+    const canMoveStoneFromBoard = this.canMoveStoneFromBoard(tileId, this.getSteps())
+    return canMoveStoneFromBoard && this.canMove 
+  }
+
   private canMoveFromBoard(steps: number): boolean {
     let canMove = false
     for (let i = 0; i < this.board.length; i++) {

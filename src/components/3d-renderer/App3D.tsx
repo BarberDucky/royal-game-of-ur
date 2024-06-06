@@ -75,24 +75,25 @@ function App3D() {
           <meshStandardMaterial color="white" />
         </mesh>
 
-        <group position={[1, 0, 5]}>
+        <group position={[1, game.canRoll ? 1 : 0, 5]}>
           {diceComponents}
         </group>
         <Board
+          canMoveStoneOnTile={(tileId: number) => gameObj.canMoveStoneFromTile(tileId)}
           position={[0, 0, 0]}
           tiles={game.board}
           tileHandler={tileHandler}
           castShadow
         />
         <Player
-          position={[-5, 0, -6]}
+          position={[-5, game.canMove && game.currentPlayer == 1 ? 1 : 0, -6]}
           bankHandler={bankHandler}
           name={game.player1.name}
           color={game.player1.color}
           stonesCount={game.player1.stonesCount}
         />
         <Player
-          position={[5, 0, -6]}
+          position={[5, game.canMove && game.currentPlayer == 2 ? 1 : 0, -6]}
           bankHandler={bankHandler}
           name={game.player2.name}
           color={game.player2.color}

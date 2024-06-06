@@ -8,13 +8,20 @@ import { TileData } from '../../model/Game'
 export interface BoardProps {
   tiles: Readonly<Array<TileData>>
   tileHandler: (tileId: number) => void
+  canMoveStoneOnTile: (tileId: number) => boolean
 }
 
 function Board(props: ThreeElements['group'] & BoardProps) {
   const { nodes, materials } = useGLTF('./models/ur-no-bump-tint.glb')
 
   const tileComponents = props.tiles.map((tile, index) => {
-    return <Tile key={index} tile={tile} tileId={index} onClick={() => props.tileHandler(index)}></Tile>
+    return <Tile
+      key={index}
+      tile={tile}
+      tileId={index}
+      canMoveStone={props.canMoveStoneOnTile(index)}
+      onClick={() => props.tileHandler(index)}
+    />
   })
 
   return (
