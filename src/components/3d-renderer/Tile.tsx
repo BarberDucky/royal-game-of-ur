@@ -14,17 +14,13 @@ export interface TileProps {
 
 function Tile(props: ThreeElements['group'] & TileProps) {
   const { nodes, materials } = useGLTF('./models/ur-no-bump-tint.glb')
-  const [isSelected, setIsSelected] = useState(false)
-  const groupRef = useRef<THREE.Mesh>(null!)
-
-  const selectedTileMaterial = (materials['Material.001'].clone() as THREE.MeshStandardMaterial)
-  selectedTileMaterial.color = new THREE.Color(0xd0d0d0)
+  const meshRef = useRef<THREE.Mesh>(null!)
 
   const zeroPadding = props.tileId < 10 ? '0' : ''
   const nodeId = 'Tile0' + zeroPadding + props.tileId
 
   let tileCenter = new THREE.Vector3()
-  groupRef.current?.geometry.boundingBox?.getCenter(tileCenter)
+  meshRef.current?.geometry.boundingBox?.getCenter(tileCenter)
   const playableHeight = props.canMoveStone ? 1 : 0
   tileCenter.setY(tileCenter.getComponent(1) + 0.25 + playableHeight)
 
@@ -42,15 +38,9 @@ function Tile(props: ThreeElements['group'] & TileProps) {
   return (
     <group {...props} dispose={null}>
       <mesh
-        ref={groupRef}
-        onPointerOver={() => setIsSelected(true)}
-        onPointerOut={() => setIsSelected(false)}
+        ref={meshRef}
         geometry={(nodes[nodeId] as THREE.Mesh).geometry}
-        material={
-          isSelected
-            ? selectedTileMaterial
-            : materials['Material.001']
-        }
+        material={materials['Material.001']}
       />
       {createStoneComponent()}
     </group>

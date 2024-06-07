@@ -13,6 +13,8 @@ export interface BoardProps {
 
 function Board(props: ThreeElements['group'] & BoardProps) {
   const { nodes, materials } = useGLTF('./models/ur-no-bump-tint.glb')
+  const filteredMaterial = (materials['Material.001'] as THREE.MeshStandardMaterial)
+  filteredMaterial.map!.anisotropy = 2
 
   const tileComponents = props.tiles.map((tile, index) => {
     return <Tile
@@ -29,7 +31,7 @@ function Board(props: ThreeElements['group'] & BoardProps) {
       <mesh
         castShadow
         geometry={(nodes.Board as Mesh).geometry}
-        material={materials['Material.001']}
+        material={filteredMaterial}
       />
       {tileComponents}
     </group>

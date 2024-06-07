@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './App3D.css';
 import { Game, GameState } from '../../model/Game';
 import { Canvas, useFrame } from '@react-three/fiber';
@@ -6,13 +6,16 @@ import Board from './Board';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import Die from './Die';
 import Player from './Player';
-import { DoubleSide, Vector3 } from 'three';
+import { DoubleSide, Group, Vector3 } from 'three';
 import ResponsiveCamera from './ResponsiveCamera';
+import AnimationDriver from './AnimationDriver';
 
 function App3D() {
 
   const [gameObj, setGameObj] = useState<Game>(new Game())
   const [game, setGame] = useState<GameState>(gameObj.getState())
+
+  const sceneRef = useRef<Group>(null!)
 
   function rollHandler() {
     gameObj.rollHandler()
@@ -69,37 +72,44 @@ function App3D() {
         shadows >
         <color attach="background" args={[0, 0, 0]} />
         <ambientLight intensity={1} />
-        <pointLight position={[0, 7, -6]} decay={1} intensity={15} castShadow />
-        <mesh position={[0, -0.5, 0]} receiveShadow>
-          <boxGeometry args={[20, 1, 20]} />
-          <meshStandardMaterial color="white" />
-        </mesh>
+        <pointLight position={[0, 7, -2]} decay={1} intensity={15} castShadow />
 
-        <group position={[1, game.canRoll ? 1 : 0, 5]}>
-          {diceComponents}
+        <group 
+        ref={sceneRef}
+        position={[0, 0, 0]}
+        >
+          <mesh position={[0, -0.5, 0]} receiveShadow>
+            <boxGeometry args={[20, 1, 20]} />
+            <meshStandardMaterial color="lightgray" />
+          </mesh>
+
+          <group position={[1, game.canRoll ? 1 : 0, 5]}>
+            {diceComponents}
+          </group>
+          <Board
+            canMoveStoneOnTile={(tileId: number) => gameObj.canMoveStoneFromTile(tileId)}
+            position={[0, 0, 0]}
+            tiles={game.board}
+            tileHandler={tileHandler}
+            castShadow
+          />
+          <Player
+            position={[-5, game.canMove && game.currentPlayer == 1 ? 1 : 0, -6]}
+            bankHandler={bankHandler}
+            name={game.player1.name}
+            color={game.player1.color}
+            stonesCount={game.player1.stonesCount}
+          />
+          <Player
+            position={[5, game.canMove && game.currentPlayer == 2 ? 1 : 0, -6]}
+            bankHandler={bankHandler}
+            name={game.player2.name}
+            color={game.player2.color}
+            stonesCount={game.player2.stonesCount}
+          />
         </group>
-        <Board
-          canMoveStoneOnTile={(tileId: number) => gameObj.canMoveStoneFromTile(tileId)}
-          position={[0, 0, 0]}
-          tiles={game.board}
-          tileHandler={tileHandler}
-          castShadow
-        />
-        <Player
-          position={[-5, game.canMove && game.currentPlayer == 1 ? 1 : 0, -6]}
-          bankHandler={bankHandler}
-          name={game.player1.name}
-          color={game.player1.color}
-          stonesCount={game.player1.stonesCount}
-        />
-        <Player
-          position={[5, game.canMove && game.currentPlayer == 2 ? 1 : 0, -6]}
-          bankHandler={bankHandler}
-          name={game.player2.name}
-          color={game.player2.color}
-          stonesCount={game.player2.stonesCount}
-        />
 
+        <AnimationDriver sceneRef={sceneRef}/>
         <ResponsiveCamera />
       </Canvas>
     </div>
