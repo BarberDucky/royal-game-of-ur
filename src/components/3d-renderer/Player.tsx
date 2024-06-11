@@ -7,6 +7,7 @@ interface PlayerProps {
   color: StoneColor
   stonesCount: number
   bankHandler: (color: 'black' | 'white') => void
+  canMoveStones: boolean 
 }
 
 function Player(props: ThreeElements['group'] & PlayerProps) {
@@ -17,6 +18,7 @@ function Player(props: ThreeElements['group'] & PlayerProps) {
       onClick={() => props.bankHandler(props.color)}
       color={props.color}
       position={[-((props.stonesCount - 1) * 1.5) / 2 + i * 1.5, 0.25, 0]}
+      isActive={props.canMoveStones}
     ></Stone>
   })
 

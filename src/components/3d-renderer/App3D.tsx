@@ -55,6 +55,7 @@ function App3D() {
       onClick={rollHandler}
       position={position as unknown as Vector3}
       castShadow
+      canRoll={game.canRoll}
     >
     </Die>
   })
@@ -83,7 +84,7 @@ function App3D() {
             <meshStandardMaterial color="lightgray" />
           </mesh>
 
-          <group position={[1, game.canRoll ? 1 : 0, 5]}>
+          <group position={[1, 0, 5]}>
             {diceComponents}
           </group>
           <Board
@@ -94,18 +95,20 @@ function App3D() {
             castShadow
           />
           <Player
-            position={[-5, game.canMove && game.currentPlayer == 1 ? 1 : 0, -6]}
+            position={[-5, 0, -6]}
             bankHandler={bankHandler}
             name={game.player1.name}
             color={game.player1.color}
             stonesCount={game.player1.stonesCount}
+            canMoveStones={game.canMove && game.currentPlayer == 1}
           />
           <Player
-            position={[5, game.canMove && game.currentPlayer == 2 ? 1 : 0, -6]}
+            position={[5, 0, -6]}
             bankHandler={bankHandler}
             name={game.player2.name}
             color={game.player2.color}
             stonesCount={game.player2.stonesCount}
+            canMoveStones={game.canMove && game.currentPlayer == 2}
           />
         </group>
 

@@ -21,15 +21,14 @@ function Tile(props: ThreeElements['group'] & TileProps) {
 
   let tileCenter = new THREE.Vector3()
   meshRef.current?.geometry.boundingBox?.getCenter(tileCenter)
-  const playableHeight = props.canMoveStone ? 1 : 0
-  tileCenter.setY(tileCenter.getComponent(1) + 0.25 + playableHeight)
+  tileCenter.setY(tileCenter.getComponent(1) + 0.25)
 
   function createStoneComponent() {
     const stone = props.tile.stone
     if (stone == 'black') {
-      return <Stone color="black" onClick={() => props.onClick()} position={tileCenter}></Stone>
+      return <Stone color="black" onClick={() => props.onClick()} position={tileCenter} isActive={props.canMoveStone}></Stone>
     } else if (stone == 'white') {
-      return <Stone color="white" onClick={() => props.onClick()} position={tileCenter}></Stone>
+      return <Stone color="white" onClick={() => props.onClick()} position={tileCenter} isActive={props.canMoveStone}></Stone>
     } else {
       return null
     }

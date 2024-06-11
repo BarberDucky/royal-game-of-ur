@@ -1,15 +1,27 @@
 import * as THREE from 'three'
-import { ThreeElements } from "@react-three/fiber"
+import { ThreeElements, useFrame } from "@react-three/fiber"
 import { useGLTF } from '@react-three/drei'
 import { StoneColor } from '../../model/Game'
+import { useState } from 'react'
 
 export interface StoneProps {
   color: StoneColor
+  isActive: boolean
 }
 
 function Stone(props: ThreeElements['group'] & StoneProps) {
   const { nodes, materials } = useGLTF('./models/ur-no-bump-tint.glb')
+  const [verticalOffset, setVerticalOffset] = useState(0)
 
+  useFrame(({ clock }) => {
+    if (props.isActive) {
+      const floatOffset = (Math.sin(clock.elapsedTime * 2) + 1) / 4
+      setVerticalOffset(floatOffset)
+    } else {
+      setVerticalOffset(0)
+    }
+  })
+  
   const stoneComponent = props.color == 'black'
     ? <mesh
       castShadow
@@ -26,7 +38,9 @@ function Stone(props: ThreeElements['group'] & StoneProps) {
 
   return (
     <group {...props} dispose={null}>
-      {stoneComponent}
+      <group position={[0, verticalOffset, 0]}>
+        {stoneComponent}
+      </group>
     </group>
   )
 }
