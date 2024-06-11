@@ -116,6 +116,11 @@ function App3D() {
 
         <AnimationDriver sceneRef={sceneRef}/>
         <ResponsiveCamera />
+        <OrbitControls
+          enableZoom={true}
+          enablePan={true}
+          enableRotate={false}
+        />
       </Canvas>
     </div>
   );
