@@ -70,6 +70,10 @@ export class Game {
   }
 
   private canMoveFromBank(steps: number): boolean {
+    if (steps < 1) {
+      return false
+    }
+
     const player = this.currentPlayer == 1 ? this.player1 : this.player2
     const playerTile = this.currentPlayer == 1 ? 'black' : 'white'
     const playerPathIndex = player.boardPath[steps - 1]
@@ -83,6 +87,11 @@ export class Game {
     }
 
     return true
+  }
+
+  public canMoveStonesFromBank(): boolean {
+    const canMoveStoneFromBank = this.canMoveFromBank(this.getSteps())
+    return canMoveStoneFromBank && this.canMove
   }
 
   private canMoveStoneFromBoard(tileId: number, steps: number): boolean {
@@ -111,7 +120,7 @@ export class Game {
 
   public canMoveStoneFromTile(tileId: number): boolean {
     const canMoveStoneFromBoard = this.canMoveStoneFromBoard(tileId, this.getSteps())
-    return canMoveStoneFromBoard && this.canMove 
+    return canMoveStoneFromBoard && this.canMove
   }
 
   private canMoveFromBoard(steps: number): boolean {

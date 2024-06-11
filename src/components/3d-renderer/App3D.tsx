@@ -66,6 +66,8 @@ function App3D() {
       ? `MOVE PLAYER ${game.currentPlayer} BY ${gameObj.getSteps()}`
       : `I DONT KNOW?!?! PLAYER ${game.currentPlayer}`
 
+  const canMoveFromBank = gameObj.canMoveStonesFromBank()
+
   return (
     <div className="App3D">
       <Canvas
@@ -100,7 +102,7 @@ function App3D() {
             name={game.player1.name}
             color={game.player1.color}
             stonesCount={game.player1.stonesCount}
-            canMoveStones={game.canMove && game.currentPlayer == 1}
+            canMoveStones={canMoveFromBank && game.currentPlayer == 1}
           />
           <Player
             position={[5, 0, -6]}
@@ -108,7 +110,7 @@ function App3D() {
             name={game.player2.name}
             color={game.player2.color}
             stonesCount={game.player2.stonesCount}
-            canMoveStones={game.canMove && game.currentPlayer == 2}
+            canMoveStones={canMoveFromBank && game.currentPlayer == 2}
           />
         </group>
 
