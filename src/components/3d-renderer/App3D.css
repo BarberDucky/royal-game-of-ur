@@ -3,9 +3,10 @@
   width: 100%;
   text-align: center;
   opacity: 0;
+}
 
+.App3D-Animation {
   animation-duration: 2s;
-  animation-delay: 3.5s;
   animation-name: board-appear;
   animation-fill-mode: forwards;
 }

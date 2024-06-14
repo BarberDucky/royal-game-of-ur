@@ -1,16 +1,26 @@
-import React, { useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import './App3D.css';
 import { Game, GameState } from '../../model/Game';
 import { Canvas, useFrame } from '@react-three/fiber';
 import Board from './Board';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+import { OrbitControls, useGLTF, useProgress } from '@react-three/drei';
 import Die from './Die';
 import Player from './Player';
 import { DoubleSide, Group, Vector3 } from 'three';
 import ResponsiveCamera from './ResponsiveCamera';
 import AnimationDriver from './AnimationDriver';
 
-function App3D() {
+function App3D(props: { canStart: boolean }) {
+
+  const { active } = useProgress()
+
+  const [loadedTimeStamp, setLoadedTimeStamp] = useState(-1)
+
+  useEffect(() => {
+    if (!active && props.canStart && loadedTimeStamp == -1) {
+      setLoadedTimeStamp(performance.now() / 1000)
+    }
+  }, [active, props.canStart])
 
   const [gameObj, setGameObj] = useState<Game>(new Game())
   const [game, setGame] = useState<GameState>(gameObj.getState())
@@ -69,58 +79,59 @@ function App3D() {
   const canMoveFromBank = gameObj.canMoveStonesFromBank()
 
   return (
-    <div className="App3D">
+    <div className={`App3D ${loadedTimeStamp != -1 ? 'App3D-Animation' : ''}`}>
       <Canvas
         camera={{ position: [-10, 8, -10] }} orthographic
         shadows >
-        <color attach="background" args={[0, 0, 0]} />
-        <ambientLight intensity={1} />
-        <pointLight position={[0, 7, -2]} decay={1} intensity={15} castShadow />
+        <Suspense>
+          <color attach="background" args={[0, 0, 0]} />
+          <ambientLight intensity={1} />
+          <pointLight position={[0, 7, -2]} decay={1} intensity={15} castShadow />
 
-        <group 
-        ref={sceneRef}
-        position={[0, 0, 0]}
-        >
-          <mesh position={[0, -0.5, 0]} receiveShadow>
-            <boxGeometry args={[20, 1, 20]} />
-            <meshStandardMaterial color="lightgray" />
-          </mesh>
-
-          <group position={[1, 0, 5]}>
-            {diceComponents}
-          </group>
-          <Board
-            canMoveStoneOnTile={(tileId: number) => gameObj.canMoveStoneFromTile(tileId)}
+          <group
+            ref={sceneRef}
             position={[0, 0, 0]}
-            tiles={game.board}
-            tileHandler={tileHandler}
-            castShadow
-          />
-          <Player
-            position={[-5, 0, -6]}
-            bankHandler={bankHandler}
-            name={game.player1.name}
-            color={game.player1.color}
-            stonesCount={game.player1.stonesCount}
-            canMoveStones={canMoveFromBank && game.currentPlayer == 1}
-          />
-          <Player
-            position={[5, 0, -6]}
-            bankHandler={bankHandler}
-            name={game.player2.name}
-            color={game.player2.color}
-            stonesCount={game.player2.stonesCount}
-            canMoveStones={canMoveFromBank && game.currentPlayer == 2}
-          />
-        </group>
+          >
+            <mesh position={[0, -0.5, 0]} receiveShadow>
+              <boxGeometry args={[20, 1, 20]} />
+              <meshStandardMaterial color="lightgray" />
+            </mesh>
 
-        <AnimationDriver sceneRef={sceneRef}/>
-        <ResponsiveCamera />
-        <OrbitControls
-          enableZoom={true}
-          enablePan={true}
-          enableRotate={false}
-        />
+            <group position={[1, 0, 5]}>
+              {diceComponents}
+            </group>
+            <Board
+              canMoveStoneOnTile={(tileId: number) => gameObj.canMoveStoneFromTile(tileId)}
+              position={[0, 0, 0]}
+              tiles={game.board}
+              tileHandler={tileHandler}
+              castShadow
+            />
+            <Player
+              position={[-5, 0, -6]}
+              bankHandler={bankHandler}
+              name={game.player1.name}
+              color={game.player1.color}
+              stonesCount={game.player1.stonesCount}
+              canMoveStones={canMoveFromBank && game.currentPlayer == 1}
+            />
+            <Player
+              position={[5, 0, -6]}
+              bankHandler={bankHandler}
+              name={game.player2.name}
+              color={game.player2.color}
+              stonesCount={game.player2.stonesCount}
+              canMoveStones={canMoveFromBank && game.currentPlayer == 2}
+            />
+          </group>
+          <ResponsiveCamera />
+          <OrbitControls
+            enableZoom={true}
+            enablePan={true}
+            enableRotate={false}
+          />
+        </Suspense>
+        <AnimationDriver sceneRef={sceneRef} ready={!active && props.canStart} />
       </Canvas>
     </div>
   );
