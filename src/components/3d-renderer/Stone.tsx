@@ -21,7 +21,7 @@ function Stone(props: ThreeElements['group'] & StoneProps) {
       setVerticalOffset(0)
     }
   })
-  
+
   const stoneComponent = props.color == 'black'
     ? <mesh
       castShadow

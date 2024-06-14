@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { ThreeElements } from "@react-three/fiber"
 import { useGLTF } from '@react-three/drei'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { TileData } from '../../model/Game'
 import Stone from './Stone'
 

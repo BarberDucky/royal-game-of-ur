@@ -7,7 +7,7 @@ interface PlayerProps {
   color: StoneColor
   stonesCount: number
   bankHandler: (color: 'black' | 'white') => void
-  canMoveStones: boolean 
+  canMoveStones: boolean
 }
 
 function Player(props: ThreeElements['group'] & PlayerProps) {

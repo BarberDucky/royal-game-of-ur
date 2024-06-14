@@ -15,6 +15,7 @@ function App() {
     <>
       <IntroPage emitAnimationOver={introOverHandler}></IntroPage>
       <App3D canStart={introOver}></App3D>
+      <span id="copyright">Board image © The Trustees of the British Museum.</span>
     </>
   );
 }

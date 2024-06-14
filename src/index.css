@@ -13,3 +13,10 @@ html, body, #root{
   justify-content: center;
   align-items: center;
 }
+
+#copyright {
+  color: white;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
