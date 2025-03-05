@@ -1,0 +1,1 @@
+Board image © The Trustees of the British Museum
